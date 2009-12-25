@@ -14,8 +14,8 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int TextView01=0x7f050001;
-        public static final int View01=0x7f050000;
+        public static final int GameBoard01=0x7f050001;
+        public static final int TextView01=0x7f050000;
     }
     public static final class layout {
         public static final int main=0x7f030000;

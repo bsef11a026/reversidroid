@@ -19,9 +19,10 @@ public class Reversi extends Activity {
 		this.setTitle("Rever-droid");
 		super.onCreate(savedInstanceState);
 
-		gameBoard = new GameBoard(this.getApplicationContext());
+		//gameBoard = new GameBoard(this.getApplicationContext());
 
-		this.setContentView(gameBoard);
+		//this.setContentView(gameBoard);
+		this.setContentView(R.layout.main);
 
 	}
 
