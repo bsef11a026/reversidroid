@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -36,12 +37,12 @@ public class GameBoard extends View {
 	/**
 	 * The top margin
 	 */
-	private static int HORIZONTAL_MARGIN = 5;
+	private static int TOP_MARGIN = 0;
 
 	/**
 	 * Vertical margin
 	 */
-	private static int VERTICAL_MARGIN = 5;
+	private static int LEFT_MARGIN = 0;
 
 	// //////////////////// FIELDS ///////////////////////////////////
 
@@ -62,14 +63,10 @@ public class GameBoard extends View {
 
 	private int height;
 
-	private int verticalCorrection;
-
-	private int horizontalCorrection;
-
 	private int cellWidth;
 
 	private int cellHeight;
-	
+
 	private int backgroundColor = Color.rgb(50, 50, 50);
 
 	/**
@@ -98,8 +95,8 @@ public class GameBoard extends View {
 	/**
 	 * Default constructor
 	 */
-	public GameBoard(Context context) {
-		super(context);
+	public GameBoard(Context context, AttributeSet attr) {
+		super(context, attr);
 
 		// ok, I am not going to use spring for such a simple program,
 		// but the POJO design, supports spring injection, is testable and
@@ -124,7 +121,7 @@ public class GameBoard extends View {
 			this.calculateGraphicParameters();
 			this.isNotCalulatedParameters = false;
 		}
-		this.setBackgroundColor(this.backgroundColor);
+		//this.setBackgroundColor(this.backgroundColor);
 		// drawing the game board
 		this.drawBoard();
 
@@ -151,6 +148,8 @@ public class GameBoard extends View {
 
 			this.setPosition(col, row, this.gameFacade.getCurrentPlayer());
 			this.invalidate();
+			this.refreshCounters();
+			
 			return true;
 		} else {
 			return false;
@@ -158,9 +157,19 @@ public class GameBoard extends View {
 
 	};
 
+	
 	// ////////////////////// PUBLIC METHODS /////////////////////////////
 
 	// ////////////////////// PRIVATE METHODS ////////////////////////////
+	
+	/**
+	 * Paints the counters
+	 */
+	private void refreshCounters() {
+		
+		int one = this.gameFacade.getCounterForPlayer(GameFacade.PLAYER_ONE);
+	}
+
 
 	/**
 	 * draws a fill circle in the column and row given having in mind the player
@@ -179,7 +188,7 @@ public class GameBoard extends View {
 	 */
 	private int transformCoordinateYInRow(float y) {
 
-		int row = (int) ((y - HORIZONTAL_MARGIN - horizontalCorrection) / this.cellHeight);
+		int row = (int) ((y - TOP_MARGIN) / this.cellHeight);
 
 		// if tapped outside the board
 		if (row < 0 || row >= GameLogic.ROWS) {
@@ -197,7 +206,7 @@ public class GameBoard extends View {
 	 */
 	private int transformCoordinateXInColumn(float x) {
 
-		int col = (int) ((x - VERTICAL_MARGIN - verticalCorrection) / this.cellWidth);
+		int col = (int) ((x - LEFT_MARGIN) / this.cellWidth);
 
 		// if tapped outside the board
 		if (col < 0 || col >= GameLogic.COLS) {
@@ -218,8 +227,8 @@ public class GameBoard extends View {
 		int cellMediumY = (row * this.cellHeight + (row + 1) * this.cellHeight) / 2;
 
 		// applying the margins
-		int cx = cellMediumX + VERTICAL_MARGIN + this.verticalCorrection;
-		int cy = cellMediumY + HORIZONTAL_MARGIN + this.horizontalCorrection;
+		int cx = cellMediumX + LEFT_MARGIN;
+		int cy = cellMediumY + TOP_MARGIN;
 		// now the radius
 		int radius = (this.cellWidth - 2) / 2 - 2;
 
@@ -323,24 +332,28 @@ public class GameBoard extends View {
 	 * Calculates the graphic parameters such as cell width, cell height, etc
 	 */
 	private void calculateGraphicParameters() {
-		width = canvas.getWidth();
-		height = canvas.getHeight();
-		// used for centering the board
-		verticalCorrection = 0;
-		horizontalCorrection = 0;
 
-		// getting the minor and centering
+		View gameBoard = findViewById(R.id.GameBoard01);
+
+		width = gameBoard.getWidth();
+		height = gameBoard.getHeight();
+		
+
+		// getting the minor (the board is a square)
 		if (height > width) {
-			// horizontalCorrection = ((height) - (width)) / 2;
 			height = width;
-
 		} else {
-			// verticalCorrection = ((width) - (height)) / 2;
 			width = height;
 		}
+		
+		//converting the dimensions in 8 multiple 
+		while (width % 8 != 0) {
+			width--;
+			height --;
+		}
 
-		cellWidth = (width - VERTICAL_MARGIN * 2) / NUMBER_OF_COLUMNS;
-		cellHeight = (height - HORIZONTAL_MARGIN * 2) / NUMBER_OF_ROWS;
+		cellWidth = (width - LEFT_MARGIN * 2) / NUMBER_OF_COLUMNS;
+		cellHeight = (height - TOP_MARGIN * 2) / NUMBER_OF_ROWS;
 	}
 
 	/**
@@ -351,23 +364,18 @@ public class GameBoard extends View {
 	private void drawGrid() {
 		Paint paint = new Paint();
 		paint.setColor(Color.GRAY);
-		for (int col = 0; col < NUMBER_OF_COLUMNS + 1; col++) {
+		for (int col = 0; col <= NUMBER_OF_COLUMNS; col++) {
 			// vertical lines
-			canvas.drawLine(col * cellWidth + VERTICAL_MARGIN
-					+ verticalCorrection, HORIZONTAL_MARGIN
-					+ horizontalCorrection, col * cellWidth + VERTICAL_MARGIN
-					+ verticalCorrection,
-					(height + horizontalCorrection - HORIZONTAL_MARGIN * 2),
-					paint);
-
-		}
+			int x = col * cellWidth + LEFT_MARGIN;
+			canvas.drawLine(x, TOP_MARGIN, x, height - TOP_MARGIN * 1, paint);
+}
 
 		for (int row = 0; row < NUMBER_OF_ROWS + 1; row++) {
+
+			int y = row * cellHeight + TOP_MARGIN;
 			// horizontal lines
-			canvas.drawLine(VERTICAL_MARGIN + verticalCorrection, row
-					* cellHeight + HORIZONTAL_MARGIN + horizontalCorrection,
-					width - (VERTICAL_MARGIN * 2), row * cellHeight
-							+ HORIZONTAL_MARGIN + horizontalCorrection, paint);
+			canvas.drawLine(LEFT_MARGIN, y, width - (LEFT_MARGIN * 1), y,
+							paint);
 		}
 	}
 
