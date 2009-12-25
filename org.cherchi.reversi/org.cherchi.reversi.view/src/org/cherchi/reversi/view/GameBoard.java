@@ -98,11 +98,7 @@ public class GameBoard extends View {
 	public GameBoard(Context context, AttributeSet attr) {
 		super(context, attr);
 
-		// ok, I am not going to use spring for such a simple program,
-		// but the POJO design, supports spring injection, is testable and
-		// mockable!
-		this.gameFacade = new GameFacadeImpl();
-		this.gameFacade.setGameLogic(new GameLogicImpl());
+		
 
 	}
 
@@ -113,6 +109,7 @@ public class GameBoard extends View {
 	 * 
 	 * @param canvas
 	 */
+	@Override
 	public void onDraw(Canvas canvas) {
 
 		this.canvas = canvas;
@@ -129,7 +126,18 @@ public class GameBoard extends View {
 		this.markAllowedPositions(this.gameFacade.getCurrentPlayer());
 
 	}
-
+	
+	@Override
+	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {} {
+		
+		int n = 0;
+	}
+	
+	@Override
+	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+		int n = 0;
+	}
+	
 	/**
 	 * Occurs when user touches the screen
 	 */

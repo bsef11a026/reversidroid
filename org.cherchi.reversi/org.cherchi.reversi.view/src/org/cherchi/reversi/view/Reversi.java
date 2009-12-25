@@ -1,5 +1,9 @@
 package org.cherchi.reversi.view;
 
+import org.cherchi.reversi.logic.GameFacade;
+import org.cherchi.reversi.logic.internal.GameFacadeImpl;
+import org.cherchi.reversi.logic.internal.GameLogicImpl;
+
 import android.app.Activity;
 import android.os.Bundle;
 
@@ -8,8 +12,11 @@ public class Reversi extends Activity {
 	/**
 	 * The game board
 	 */
-	GameBoard gameBoard = null;
+	private GameFacade gameFacade = null;
 
+	// ///////////////////////// LIFETIME /////////////////////////////////
+
+	
 	// ///////////////////////// EVENTS /////////////////////////////////
 
 	/** Called when the activity is first created. */
@@ -18,12 +25,26 @@ public class Reversi extends Activity {
 
 		this.setTitle("Rever-droid");
 		super.onCreate(savedInstanceState);
-
-		//gameBoard = new GameBoard(this.getApplicationContext());
-
-		//this.setContentView(gameBoard);
 		this.setContentView(R.layout.main);
+		
+		//retrieving the old facade if any
+		//trying to recover the last version
+		this.gameFacade = (GameFacade) this.getLastNonConfigurationInstance();
+		//if is the first time... 
+		if (gameFacade == null) {
+			this.gameFacade = new GameFacadeImpl();
+			this.gameFacade.setGameLogic(new GameLogicImpl());
+		}
+		
+		GameBoard gameBoard = (GameBoard) this.findViewById(R.id.GameBoard01);
+		gameBoard.setGameFacade(this.gameFacade);
 
+	}
+
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+
+		return this.gameFacade;
 	}
 
 }
