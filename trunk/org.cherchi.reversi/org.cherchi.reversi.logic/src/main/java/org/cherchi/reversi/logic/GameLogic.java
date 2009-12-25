@@ -83,6 +83,12 @@ public interface GameLogic {
 	 * @param row
 	 */
 	void conquerPosition(int player, int column, int row);
+
+	/**
+	 * Gets the counter for the given player
+	 * @param player
+	 */
+	int getCounterForPlayer(int player);
 	
 	
 	

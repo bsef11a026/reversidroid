@@ -2,7 +2,6 @@ package org.cherchi.reversi.logic;
 
 public interface GameFacade {
 	
-	
 	/**
 	 * players
 	 */
@@ -14,9 +13,6 @@ public interface GameFacade {
 	 * starts a new game
 	 */
 	void restart();
-	
-	
-	
 	
 	/**
 	 * Sets a chip in the given position
@@ -34,13 +30,11 @@ public interface GameFacade {
 	int getCurrentPlayer();
 
 
-
 	/**
 	 * Gets the matrix of allowed positions of the player that has to play
 	 * @return
 	 */
 	int[][] getAllowedPositionsForPlayer();
-
 
 	
 	/**
@@ -53,5 +47,13 @@ public interface GameFacade {
 	 * @param gameLogic the gameLogic to set
 	 */
 	public void setGameLogic(GameLogic gameLogic);
+
+
+	/**
+	 * Gets the counter for the given player
+	 * @param player
+	 * @return
+	 */
+	int getCounterForPlayer(int player);
 
 }
