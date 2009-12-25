@@ -108,4 +108,9 @@ public class GameFacadeImpl implements GameFacade {
 		return this.gameLogic.getCurrentPlayer();
 	}
 
+	@Override
+	public int getCounterForPlayer(int player) {
+		return this.gameLogic.getCounterForPlayer(player);
+	}
+
 }

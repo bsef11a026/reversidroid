@@ -138,6 +138,24 @@ public class GameLogicImpl implements GameLogic {
 		}
 
 	}
+	
+	/**
+	 * Gets the number of stones for a given player
+	 * @return 
+	 */
+	@Override
+	public int getCounterForPlayer(int player) {
+		
+		int counter = 0;
+		for (int i = 0; i < COLS; i ++) {
+			for (int j = 0; j < ROWS; j ++) {
+				if (this.gameMatrix[i][j] == player) {
+					counter++;
+				}
+			}
+		}
+		return counter;
+	}
 
 	// /////////////////////// PRIVATE METHODS //////////////////////////
 
@@ -208,6 +226,8 @@ public class GameLogicImpl implements GameLogic {
 	public void setCurrentPlayer(int player) {
 		this.currentPlayer = player;
 	}
+
+	
 	
 
 }

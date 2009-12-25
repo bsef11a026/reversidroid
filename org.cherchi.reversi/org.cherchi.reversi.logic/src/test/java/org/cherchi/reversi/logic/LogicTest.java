@@ -31,6 +31,18 @@ public class LogicTest {
 	}
 
 	/**
+	 * Tests counter
+	 */
+	@Test
+	public void testCounters() {
+
+		// initially there must be 2 and 2
+		assertEquals("It must be 2 player one stones", 2, game.getCounterForPlayer(GameLogic.PLAYER_ONE));
+		assertEquals("It must be 2 player two stones", 2, game.getCounterForPlayer(GameLogic.PLAYER_TWO));
+		
+	}
+	
+	/**
 	 * Tests that cannot set a chip in a busy cell
 	 */
 	@Test
