@@ -3,13 +3,24 @@
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent" android:padding="25dip">
 
-	<!--		<View android:padding></View>-->
-	<TextView android:text="@string/p1" android:id="@+id/TextView01"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"></TextView>
-	<TextView android:text="@string/p2" android:id="@+id/TextView01"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"></TextView>
-	<org.cherchi.reversi.view.GameBoard	android:id="@+id/GameBoard01" android:layout_width="wrap_content"
-		android:layout_height= "fill_parent">
+	<LinearLayout android:orientation="horizontal"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:paddingRight="25dip">
+		<TextView android:text="@string/p1" android:id="@+id/txtPlayer1"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+		<TextView android:text=" 2" android:id="@+id/txtPlayer1Counter"
+			android:minWidth="30dp" android:layout_width="wrap_content"
+			android:layout_height="wrap_content"></TextView>
+		<TextView android:text="@string/p2" android:id="@+id/txtPlayer2"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+		<TextView android:text=" 2" android:id="@+id/txtPlayer2Counter"
+			android:minWidth="30dp" android:layout_width="wrap_content"
+			android:layout_height="wrap_content"></TextView>
+	</LinearLayout>
+	
+	<org.cherchi.reversi.view.GameBoard
+		android:id="@+id/gameBoard" android:layout_width="wrap_content"
+		android:layout_height="fill_parent">
 	</org.cherchi.reversi.view.GameBoard>
 
 </LinearLayout>
