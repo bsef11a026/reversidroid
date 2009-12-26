@@ -1,5 +1,6 @@
 package org.cherchi.reversi.logic;
 
+
 public interface GameFacade {
 	
 	/**
@@ -46,14 +47,21 @@ public interface GameFacade {
 	/**
 	 * @param gameLogic the gameLogic to set
 	 */
-	public void setGameLogic(GameLogic gameLogic);
+	void setGameLogic(GameLogic gameLogic);
 
 
 	/**
-	 * Gets the counter for the given player
+	 * The given listener will be notified when the score changes
+	 * @param listener
+	 * The listener
+	 */
+	void setGameEventsListener(GameEventsListener listener);
+
+	/**
+	 * Returns the score for the given player
 	 * @param player
 	 * @return
 	 */
-	int getCounterForPlayer(int player);
+	int getScoreForPlayer(int player);
 
 }
