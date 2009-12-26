@@ -13,6 +13,7 @@ import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 /**
  * This is the game board canvas
@@ -73,13 +74,13 @@ public class GameBoard extends View {
 	 * The color used by the player 1
 	 */
 	private int playerOneColor = Color.BLUE;
-	private int playerOneInsideColor = Color.rgb(0, 0, 150);
+	private int playerOneInsideColor = Color.rgb(0, 0, 200);
 
 	/**
 	 * Color used by player 2
 	 */
 	private int playerTwoColor = Color.RED;
-	private int playerTwoInsideColor = Color.rgb(150, 0, 0);
+	private int playerTwoInsideColor = Color.rgb(200, 0, 0);
 
 	/**
 	 * indicates if the help of possible position is selected
@@ -97,8 +98,6 @@ public class GameBoard extends View {
 	 */
 	public GameBoard(Context context, AttributeSet attr) {
 		super(context, attr);
-
-		
 
 	}
 
@@ -118,7 +117,7 @@ public class GameBoard extends View {
 			this.calculateGraphicParameters();
 			this.isNotCalulatedParameters = false;
 		}
-		//this.setBackgroundColor(this.backgroundColor);
+		// this.setBackgroundColor(this.backgroundColor);
 		// drawing the game board
 		this.drawBoard();
 
@@ -126,18 +125,7 @@ public class GameBoard extends View {
 		this.markAllowedPositions(this.gameFacade.getCurrentPlayer());
 
 	}
-	
-	@Override
-	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {} {
-		
-		int n = 0;
-	}
-	
-	@Override
-	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-		int n = 0;
-	}
-	
+
 	/**
 	 * Occurs when user touches the screen
 	 */
@@ -156,8 +144,8 @@ public class GameBoard extends View {
 
 			this.setPosition(col, row, this.gameFacade.getCurrentPlayer());
 			this.invalidate();
-			this.refreshCounters();
 			
+
 			return true;
 		} else {
 			return false;
@@ -165,19 +153,11 @@ public class GameBoard extends View {
 
 	};
 
-	
 	// ////////////////////// PUBLIC METHODS /////////////////////////////
 
 	// ////////////////////// PRIVATE METHODS ////////////////////////////
-	
-	/**
-	 * Paints the counters
-	 */
-	private void refreshCounters() {
-		
-		int one = this.gameFacade.getCounterForPlayer(GameFacade.PLAYER_ONE);
-	}
 
+	
 
 	/**
 	 * draws a fill circle in the column and row given having in mind the player
@@ -341,11 +321,10 @@ public class GameBoard extends View {
 	 */
 	private void calculateGraphicParameters() {
 
-		View gameBoard = findViewById(R.id.GameBoard01);
+		View gameBoard = findViewById(R.id.gameBoard);
 
 		width = gameBoard.getWidth();
 		height = gameBoard.getHeight();
-		
 
 		// getting the minor (the board is a square)
 		if (height > width) {
@@ -353,11 +332,11 @@ public class GameBoard extends View {
 		} else {
 			width = height;
 		}
-		
-		//converting the dimensions in 8 multiple 
+
+		// converting the dimensions in 8 multiple
 		while (width % 8 != 0) {
 			width--;
-			height --;
+			height--;
 		}
 
 		cellWidth = (width - LEFT_MARGIN * 2) / NUMBER_OF_COLUMNS;
@@ -376,13 +355,14 @@ public class GameBoard extends View {
 			// vertical lines
 			int x = col * cellWidth + LEFT_MARGIN;
 			canvas.drawLine(x, TOP_MARGIN, x, height - TOP_MARGIN * 1, paint);
-}
+		}
 
 		for (int row = 0; row < NUMBER_OF_ROWS + 1; row++) {
 
 			int y = row * cellHeight + TOP_MARGIN;
 			// horizontal lines
-			canvas.drawLine(LEFT_MARGIN, y, width - (LEFT_MARGIN * 1), y,
+			canvas
+					.drawLine(LEFT_MARGIN, y, width - (LEFT_MARGIN * 1), y,
 							paint);
 		}
 	}

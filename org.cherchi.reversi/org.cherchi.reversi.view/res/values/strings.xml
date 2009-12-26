@@ -4,4 +4,10 @@
     <string name="app_name">Reversi</string>
 <string name="p1">Player 1:</string>
 <string name="p2">Player 2:</string>
+
+<string name="settings_label">Settings...</string>
+<string name="show_hints">Show allowed positions</string>
+<string name="settings_shortcut">s</string>
+<string name="restart_label">Start a new game</string>
+<string name="restart_shortcut">r</string>
 </resources>
