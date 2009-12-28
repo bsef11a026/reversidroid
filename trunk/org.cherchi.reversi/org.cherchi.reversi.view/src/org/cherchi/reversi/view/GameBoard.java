@@ -68,8 +68,6 @@ public class GameBoard extends View {
 
 	private int cellHeight;
 
-	private int backgroundColor = Color.rgb(50, 50, 50);
-
 	/**
 	 * The color used by the player 1
 	 */
@@ -82,10 +80,7 @@ public class GameBoard extends View {
 	private int playerTwoColor = Color.RED;
 	private int playerTwoInsideColor = Color.rgb(200, 0, 0);
 
-	/**
-	 * indicates if the help of possible position is selected
-	 */
-	private boolean markAllowedPositionIsSelected = true;
+	
 
 	/**
 	 * The first time parameters are not calculated
@@ -121,8 +116,8 @@ public class GameBoard extends View {
 		// drawing the game board
 		this.drawBoard();
 
-		// setting all possible position (can be only for level 1)
-		this.markAllowedPositions(this.gameFacade.getCurrentPlayer());
+		// setting all possible position 
+		this.markAllowedPositions();
 
 	}
 
@@ -264,11 +259,10 @@ public class GameBoard extends View {
 
 	/**
 	 * Marks in the screen the allowed positions
-	 * 
-	 * @param playerOne
+	
 	 */
-	private void markAllowedPositions(int playerOne) {
-		if (this.markAllowedPositionIsSelected) {
+	private void markAllowedPositions() {
+		if (Settings.getShowAllowedPositions(getContext())) {
 
 			// getting the positions to mark
 			int[][] allowedPos = this.gameFacade.getAllowedPositionsForPlayer();
@@ -333,7 +327,7 @@ public class GameBoard extends View {
 			width = height;
 		}
 
-		// converting the dimensions in 8 multiple
+		// converting the dimensions to get them divisible by 8 
 		while (width % 8 != 0) {
 			width--;
 			height--;
@@ -399,4 +393,5 @@ public class GameBoard extends View {
 		return gameFacade;
 	}
 
+	
 }

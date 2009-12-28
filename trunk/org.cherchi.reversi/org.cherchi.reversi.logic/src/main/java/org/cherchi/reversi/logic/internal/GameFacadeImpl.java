@@ -33,8 +33,8 @@ public class GameFacadeImpl implements GameFacade {
 	 */
 	@Override
 	public void restart() {
-		// TODO Auto-generated method stub
-
+		
+		this.gameLogic.initialize();
 	}
 
 	/**

@@ -4,5 +4,6 @@
   <CheckBoxPreference
   	android:key="show_allowed_positions"
   	android:title="@string/show_hints"
+  	android:summary="@string/show_hints_description"
   	android:defaultValue="true"/>
 </PreferenceScreen>
