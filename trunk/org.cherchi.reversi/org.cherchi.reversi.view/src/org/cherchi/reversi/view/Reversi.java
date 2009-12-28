@@ -2,18 +2,22 @@ package org.cherchi.reversi.view;
 
 import org.cherchi.reversi.logic.GameEventsListener;
 import org.cherchi.reversi.logic.GameFacade;
+import org.cherchi.reversi.logic.GameLogic;
 import org.cherchi.reversi.logic.internal.GameFacadeImpl;
 import org.cherchi.reversi.logic.internal.GameLogicImpl;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.MenuInflater;
 import android.widget.TextView;
 
-public class Reversi extends Activity implements GameEventsListener, OnClickListener {
+public class Reversi extends Activity implements GameEventsListener,
+		OnClickListener {
 	// ///////////////////// PRIVATE FIELDS //////////////////////////////
 	/**
 	 * The game board
@@ -29,7 +33,7 @@ public class Reversi extends Activity implements GameEventsListener, OnClickList
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		
+
 		this.setTitle("Rever-droid");
 		this.setContentView(R.layout.main);
 
@@ -43,27 +47,28 @@ public class Reversi extends Activity implements GameEventsListener, OnClickList
 		} else {
 			this.refreshCounters();
 		}
-		//caution. "this" has been re-constructed after an orientation change... so need to 
-		//subscribe as listener again
+		// caution. "this" has been re-constructed after an orientation
+		// change... so need to
+		// subscribe as listener again
 		this.gameFacade.setGameEventsListener(this);
-		
+
 		GameBoard gameBoard = (GameBoard) this.findViewById(R.id.gameBoard);
 		gameBoard.setGameFacade(this.gameFacade);
 
 	}
 
 	/**
-	 * Occurs when the user presses the menu key 
+	 * Occurs when the user presses the menu key
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(android.view.Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		
+
 		MenuInflater inflater = super.getMenuInflater();
 		inflater.inflate(R.menu.menu, menu);
 		return true;
 	}
-	
+
 	/**
 	 * Occurs when the user clicks in a menu option
 	 */
@@ -74,27 +79,26 @@ public class Reversi extends Activity implements GameEventsListener, OnClickList
 			super.startActivity(new Intent(this, Settings.class));
 			break;
 		case R.id.restart:
-			this.showNewGameConfirmation();
-			
+			this.showNewGameConfirmation(super.getResources().getString(
+					R.string.new_game_msg));
+
 		default:
 			return false;
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Occurs when the closes a dialog
+	 * 
 	 * @param dialog
 	 * @param which
 	 */
 	public void onClick(DialogInterface dialog, int which) {
-		if (which == ConfirmationDialog.YES_BUTTON) {
+		if (which == AlertDialog.BUTTON_POSITIVE) {
 			restart();
-		} 
+		}
 	}
-
-	
-	
 
 	/**
 	 * Provides the data to remember (if the screen changes orientation, the
@@ -105,8 +109,6 @@ public class Reversi extends Activity implements GameEventsListener, OnClickList
 
 		return this.gameFacade;
 	}
-	
-	
 
 	/**
 	 * Occurs when the score has changed... so refrewhing counters
@@ -116,11 +118,28 @@ public class Reversi extends Activity implements GameEventsListener, OnClickList
 
 		this.setPlayersCounters(p1Score, p2Score);
 	}
-	
-	// ///////////////////////// PRIVATE METHODS /////////////////////////////////
 
 	/**
-	 * Restarts the facade and the graphics 
+	 * Occurs when the game has finished
+	 */
+	@Override
+	public void onGameFinished(int winner) {
+		
+		String playerName;
+		if (winner == GameLogic.PLAYER_ONE) {
+			playerName = getResources().getString(R.string.p1);
+		} else {
+			playerName = getResources().getString(R.string.p2);
+		}
+		
+		this.showNewGameConfirmation(String.format(super.getResources()
+				.getString(R.string.game_finished, playerName)));
+	}
+
+	// ///////////////////////// PRIVATE METHODS ///////////////////////////////
+
+	/**
+	 * Restarts the facade and the graphics
 	 */
 	private void restart() {
 		this.gameFacade.restart();
@@ -128,38 +147,35 @@ public class Reversi extends Activity implements GameEventsListener, OnClickList
 		GameBoard gameBoard = (GameBoard) this.findViewById(R.id.gameBoard);
 		gameBoard.invalidate();
 	}
-	
 
 	/**
 	 * Refreshes the counters after an orientation changing
 	 */
 	private void refreshCounters() {
-		
+
 		int p1 = this.gameFacade.getScoreForPlayer(GameFacade.PLAYER_ONE);
 		int p2 = this.gameFacade.getScoreForPlayer(GameFacade.PLAYER_TWO);
 		this.setPlayersCounters(p1, p2);
 	}
-	
+
 	/**
 	 * Draws the scores
 	 */
 	private void setPlayersCounters(int p1Score, int p2Score) {
-		
+
 		TextView txtP1 = (TextView) this.findViewById(R.id.txtPlayer1Counter);
 		txtP1.setText(String.format(" %d", p1Score));
 		TextView txtP2 = (TextView) this.findViewById(R.id.txtPlayer2Counter);
 		txtP2.setText(String.format(" %d", p2Score));
 	}
-	
+
 	/**
-	 * shows the dialog for confirmatino of the restart
+	 * shows the dialog for confirmation of the restart
 	 */
-	private void showNewGameConfirmation() {
-		
+	private void showNewGameConfirmation(String message) {
+
 		ConfirmationDialog cd = new ConfirmationDialog(this);
-		cd.showConfirmation(this, "Are you sure you want to start a new game?");
+		cd.showConfirmation(this, message);
 	}
-
-
 
 }

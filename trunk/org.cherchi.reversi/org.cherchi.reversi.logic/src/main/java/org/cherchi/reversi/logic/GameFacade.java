@@ -10,6 +10,8 @@ public interface GameFacade {
 	
 	public static int PLAYER_TWO = 2;
 	
+	public static int NONE = 0;
+	
 	/**
 	 * starts a new game
 	 */

@@ -66,4 +66,41 @@ public class FacadeTest {
 
 	}
 
+	/**
+	 * Testing that when a player cannot set, the turn goes to the other player
+	 */
+	@Test
+	public void testSkipPlay() {
+
+		// all board is for player 1
+		TestHelper.fillAllBoardWithPlayer(GameLogic.PLAYER_ONE, this.logic);
+
+		// preparing first player 2 movement
+		this.logic.setChip(GameLogic.EMPTY, 2, 0);
+		this.logic.setChip(GameLogic.PLAYER_TWO, 2, 2);
+
+		// preparing second player 2 movement
+		this.logic.setChip(GameLogic.EMPTY, GameLogic.COLS - 1, 0);
+		this.logic.setChip(GameLogic.PLAYER_TWO, 0, 0);
+
+		// preparing the last time player 1 plays
+		this.logic.setChip(GameLogic.EMPTY, 0, 0);
+		this.logic.setChip(GameLogic.PLAYER_TWO, 0, 1);
+
+		// setting last time player 1
+		this.facade.set(GameLogic.PLAYER_ONE, 0, 0);
+
+		// now the one playing is player 2 (normal case)
+		assertEquals("Player 2 should be playing", GameLogic.PLAYER_TWO,
+				this.facade.getCurrentPlayer());
+
+		// setting player 2 (normal case, but should skip player 1)
+		this.facade.set(GameLogic.PLAYER_TWO, 0, 2);
+
+		// player 2 should be playing again (skip turn)
+		assertEquals("Player 2 should be playing, skip unsuccessful",
+				GameLogic.PLAYER_TWO, this.facade.getCurrentPlayer());
+
+	}
+
 }

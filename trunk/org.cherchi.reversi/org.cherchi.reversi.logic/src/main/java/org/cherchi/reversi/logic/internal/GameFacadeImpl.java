@@ -12,7 +12,6 @@ import org.cherchi.reversi.logic.GameLogic;
  */
 public class GameFacadeImpl implements GameFacade {
 
-	// /////////////////////// CONSTANTS ///////////////////////////////
 
 	// /////////////////////// PRIVATE FIELDS //////////////////////////
 
@@ -84,9 +83,23 @@ public class GameFacadeImpl implements GameFacade {
 	 */
 	private void notifyChanges() {
 		if (this.gameEventsListener != null) {
-			this.gameEventsListener.onScoreChanged(this.gameLogic
-					.getCounterForPlayer(PLAYER_ONE), this.gameLogic
-					.getCounterForPlayer(PLAYER_TWO));
+			
+			int p1 = this.gameLogic.getCounterForPlayer(PLAYER_ONE);
+			int p2 = this.gameLogic.getCounterForPlayer(PLAYER_TWO);
+			
+			this.gameEventsListener.onScoreChanged(p1, p2);
+			
+			if (this.gameLogic.isFinished()) {
+				int winner = NONE;
+				if (p1 > p2) {
+					winner = GameLogic.PLAYER_ONE;
+				} else if (p2 > p1) {
+					winner = GameLogic.PLAYER_TWO;
+				}
+				 
+				this.gameEventsListener.onGameFinished(winner);
+			}
+			
 		}
 	}
 
@@ -96,17 +109,27 @@ public class GameFacadeImpl implements GameFacade {
 	private void togglePlayer() {
 
 		int current = this.gameLogic.getCurrentPlayer();
-		// if the current player can play (has at least one place to put the
+		// if the next player can play (has at least one place to put the
 		// chip)
-		if (!this.gameLogic.isBlockedPlayer(current)) {
-
+		if (!this.gameLogic.isBlockedPlayer(this.opponent(current))) {
 			// just toggles
-			if (current == GameLogic.PLAYER_ONE) {
-				this.gameLogic.setCurrentPlayer(GameLogic.PLAYER_TWO);
-			} else {
-				this.gameLogic.setCurrentPlayer(GameLogic.PLAYER_ONE);
-			}
+			this.gameLogic.setCurrentPlayer(this.opponent(current));
 		}
+	}
+	
+	/**
+	 * Returns the opponent of the given player
+	 * @param player
+	 * @return
+	 */
+	private int opponent(int player) {
+		int opp = GameLogic.EMPTY;
+		if (player == GameLogic.PLAYER_ONE) {
+			opp = GameLogic.PLAYER_TWO;
+		} else if (player == GameLogic.PLAYER_TWO) {
+			opp = GameLogic.PLAYER_ONE;
+		}
+		return opp;
 	}
 
 	// /////////////////////// ACCESSORS //////////////////////////
