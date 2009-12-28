@@ -15,7 +15,8 @@ public class GameLogicImpl implements GameLogic {
 	 * The matrix
 	 */
 	private int[][] gameMatrix = new int[COLS][ROWS];
-
+	
+	
 	/**
 	 * Just a helper.
 	 */
@@ -60,16 +61,34 @@ public class GameLogicImpl implements GameLogic {
 		}
 	}
 
+	/**
+	 * Calculates if the given player is blocked
+	 * @param player
+	 * @return
+	 */
 	@Override
 	public boolean isBlockedPlayer(int player) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		int allowed[][] = this.getAllowedPositionsForPlayer(player);
+		int allowCount = 0;
+		for (int col = 0; col < COLS; col++) {
+			for (int row = 0; row < ROWS; row++) {
+				if (allowed[col][row] == player) {
+					allowCount ++;
+				}
+			}
+		}
+		return allowCount == 0;
 	}
 
+	/**
+	 * Informs if the game is finished
+	 * @return
+	 */
 	@Override
 	public boolean isFinished() {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return (isBlockedPlayer(PLAYER_ONE) && isBlockedPlayer(PLAYER_TWO));
 	}
 
 	/**

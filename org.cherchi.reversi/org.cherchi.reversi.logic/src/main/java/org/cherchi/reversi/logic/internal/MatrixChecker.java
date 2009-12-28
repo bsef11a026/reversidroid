@@ -310,10 +310,10 @@ public class MatrixChecker {
 
 		int opp = GameLogicImpl.EMPTY;
 
-		if (player == GameLogicImpl.PLAYER_ONE) {
-			opp = GameLogicImpl.PLAYER_TWO;
-		} else if (player == GameLogicImpl.PLAYER_TWO) {
-			opp = GameLogicImpl.PLAYER_ONE;
+		if (player == GameLogic.PLAYER_ONE) {
+			opp = GameLogic.PLAYER_TWO;
+		} else if (player == GameLogic.PLAYER_TWO) {
+			opp = GameLogic.PLAYER_ONE;
 		}
 		return opp;
 	}

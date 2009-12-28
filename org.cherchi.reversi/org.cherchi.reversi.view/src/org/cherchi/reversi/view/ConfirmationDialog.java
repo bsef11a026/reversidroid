@@ -1,12 +1,8 @@
 package org.cherchi.reversi.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
 /**
@@ -29,10 +25,6 @@ public class ConfirmationDialog {
 	
 	// ///////////////////////// FIELDS ///////////////////////////////////
 	
-	/**
-	 * The result
-	 */
-	private boolean result;
 	
 	/**
 	 * The listener of the response
@@ -61,13 +53,14 @@ public class ConfirmationDialog {
 	 */
 	public void showConfirmation(Context context, String msg) {
 		
-		CharSequence[] options = new CharSequence[2];
-		options[0] = context.getString(R.string.yes_caption);
-		options[1] = context.getString(R.string.no_caption);
-		
 		Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(R.string.confirm_title);
-		builder.setItems(options, this.listener);
+		builder.setPositiveButton(R.string.yes_caption, 
+				this.listener);
+		builder.setNegativeButton(R.string.no_caption, 
+				this.listener);
+		
+		builder.setMessage(msg);
 		builder.show();
 	}
 	
