@@ -156,6 +156,12 @@ public class GameLogicImpl implements GameLogic {
 		}
 		return counter;
 	}
+	
+	@Override
+	public void initialize() {
+		this.currentPlayer = PLAYER_ONE;
+		this.initializeMatrix();
+	}
 
 	// /////////////////////// PRIVATE METHODS //////////////////////////
 
@@ -226,6 +232,8 @@ public class GameLogicImpl implements GameLogic {
 	public void setCurrentPlayer(int player) {
 		this.currentPlayer = player;
 	}
+
+	
 
 	
 	

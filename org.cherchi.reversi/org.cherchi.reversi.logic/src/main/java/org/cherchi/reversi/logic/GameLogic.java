@@ -89,6 +89,11 @@ public interface GameLogic {
 	 * @param player
 	 */
 	int getCounterForPlayer(int player);
+
+	/**
+	 * Starts a new game
+	 */
+	void initialize();
 	
 	
 	

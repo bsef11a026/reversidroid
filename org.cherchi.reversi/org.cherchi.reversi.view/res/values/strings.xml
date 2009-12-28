@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
-    <string name="app_name">Reversi</string>
-<string name="p1">Player 1:</string>
-<string name="p2">Player 2:</string>
-
-<string name="settings_label">Settings...</string>
-<string name="show_hints">Show allowed positions</string>
-<string name="settings_shortcut">s</string>
-<string name="restart_label">Start a new game</string>
-<string name="restart_shortcut">r</string>
+	<string name="app_name">Reversi</string>
+	<string name="p1">Player 1:</string>
+	<string name="p2">Player 2:</string>
+	<string name="settings_label">Settings...</string>
+	<string name="show_hints">Show allowed positions</string>
+	<string name="settings_shortcut">s</string>
+	<string name="restart_label">Start a new game</string>
+	<string name="restart_shortcut">r</string>
+	<string name="show_hints_description">If is selected, all possible positions for the
+		active player are shown</string>
+	<string name="confirm_title">New Game</string>
+	<string name="yes_caption">Yes</string>
+	<string name="no_caption">No</string>
 </resources>

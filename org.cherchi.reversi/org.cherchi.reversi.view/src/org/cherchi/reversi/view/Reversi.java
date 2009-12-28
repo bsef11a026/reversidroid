@@ -6,12 +6,14 @@ import org.cherchi.reversi.logic.internal.GameFacadeImpl;
 import org.cherchi.reversi.logic.internal.GameLogicImpl;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.MenuInflater;
 import android.widget.TextView;
 
-public class Reversi extends Activity implements GameEventsListener {
+public class Reversi extends Activity implements GameEventsListener, OnClickListener {
 	// ///////////////////// PRIVATE FIELDS //////////////////////////////
 	/**
 	 * The game board
@@ -20,7 +22,7 @@ public class Reversi extends Activity implements GameEventsListener {
 
 	// ///////////////////////// LIFETIME /////////////////////////////////
 
-	// ///////////////////////// EVENTS /////////////////////////////////
+	// ///////////////////////// EVENTS ///////////////////////////////////
 
 	/** Called when the activity is first created. */
 	@Override
@@ -72,12 +74,25 @@ public class Reversi extends Activity implements GameEventsListener {
 			super.startActivity(new Intent(this, Settings.class));
 			break;
 		case R.id.restart:
-			this.gameFacade.restart();
+			this.showNewGameConfirmation();
+			
 		default:
 			return false;
 		}
 		return true;
 	}
+	
+	/**
+	 * Occurs when the closes a dialog
+	 * @param dialog
+	 * @param which
+	 */
+	public void onClick(DialogInterface dialog, int which) {
+		if (which == ConfirmationDialog.YES_BUTTON) {
+			restart();
+		} 
+	}
+
 	
 	
 
@@ -102,7 +117,18 @@ public class Reversi extends Activity implements GameEventsListener {
 		this.setPlayersCounters(p1Score, p2Score);
 	}
 	
-	// ///////////////////////// REFRESH COUNTERS /////////////////////////////////
+	// ///////////////////////// PRIVATE METHODS /////////////////////////////////
+
+	/**
+	 * Restarts the facade and the graphics 
+	 */
+	private void restart() {
+		this.gameFacade.restart();
+		this.refreshCounters();
+		GameBoard gameBoard = (GameBoard) this.findViewById(R.id.gameBoard);
+		gameBoard.invalidate();
+	}
+	
 
 	/**
 	 * Refreshes the counters after an orientation changing
@@ -125,7 +151,14 @@ public class Reversi extends Activity implements GameEventsListener {
 		txtP2.setText(String.format(" %d", p2Score));
 	}
 	
-	
+	/**
+	 * shows the dialog for confirmatino of the restart
+	 */
+	private void showNewGameConfirmation() {
+		
+		ConfirmationDialog cd = new ConfirmationDialog(this);
+		cd.showConfirmation(this, "Are you sure you want to start a new game?");
+	}
 
 
 
