@@ -5,22 +5,18 @@ import org.cherchi.reversi.logic.GameLogic;
 
 public class GameLogicImpl implements GameLogic {
 
-	// /////////////////////// CONSTANTS ///////////////////////////////
-	
-	 
-
 	// /////////////////////// PRIVATE FIELDS //////////////////////////
 
 	/**
 	 * The matrix
 	 */
-	private int[][] gameMatrix = new int[COLS][ROWS];
+	private Board board;
 	
 	
 	/**
 	 * Just a helper.
 	 */
-	private MatrixChecker matrixChecker = new MatrixChecker(gameMatrix);
+	private MatrixChecker matrixChecker;
 
 	/**
 	 * The player that has to play
@@ -31,8 +27,10 @@ public class GameLogicImpl implements GameLogic {
 	/**
 	 * initializes the matrix
 	 */
-	public GameLogicImpl() {
-		this.initializeMatrix();
+	public GameLogicImpl(Board board) {
+		this.board = board;
+		this.matrixChecker = new MatrixChecker(board);
+		
 	}
 
 	// /////////////////////// PUBLIC METHODS //////////////////////////
@@ -43,23 +41,14 @@ public class GameLogicImpl implements GameLogic {
 	@Override
 	public int[][] getGameMatrix() {
 
-		return this.gameMatrix;
+		return this.board.getMatrix();
 	}
 
-	/**
-	 * Informs if a player can set a stick in a given position
-	 */
 	@Override
 	public boolean canSet(int player, int col, int row) {
-
-		if (col >= 0 && col < COLS && row >= 0 && row < ROWS) {
-			
-			return this.matrixChecker.canSet(player, col, row);
-		} else {
-			//not a good column or row
-			return false;
-		}
+		return this.matrixChecker.canSet(player, col, row);
 	}
+	
 
 	/**
 	 * Calculates if the given player is blocked
@@ -85,7 +74,6 @@ public class GameLogicImpl implements GameLogic {
 	 * Informs if the game is finished
 	 * @return
 	 */
-	@Override
 	public boolean isFinished() {
 		
 		return (isBlockedPlayer(PLAYER_ONE) && isBlockedPlayer(PLAYER_TWO));
@@ -95,10 +83,10 @@ public class GameLogicImpl implements GameLogic {
 	 * Sets a chip in a given place
 	 */
 	@Override
-	public void setChip(int player, int col, int row) {
+	public void setStone(int player, int col, int row) {
 
 		if (col < COLS && row < ROWS) {
-			this.gameMatrix[col][row] = player;
+			this.board.setStone(col, row, player);
 		}
 	}
 
@@ -122,6 +110,10 @@ public class GameLogicImpl implements GameLogic {
 		return allowedPositions;
 	}
 
+	@Override
+	public void refreshMovilityTable() {
+		
+	}
 	
 	/**
 	 * Conquers the positions in all directions (if the player is enclosing opponent pieces, 
@@ -165,21 +157,15 @@ public class GameLogicImpl implements GameLogic {
 	@Override
 	public int getCounterForPlayer(int player) {
 		
-		int counter = 0;
-		for (int i = 0; i < COLS; i ++) {
-			for (int j = 0; j < ROWS; j ++) {
-				if (this.gameMatrix[i][j] == player) {
-					counter++;
-				}
-			}
-		}
-		return counter;
+		return this.board.getCounterForPlayer(player);
+		
 	}
 	
 	@Override
 	public void initialize() {
 		this.currentPlayer = PLAYER_ONE;
-		this.initializeMatrix();
+		this.board = new Board();
+		this.matrixChecker = new MatrixChecker(this.board);
 	}
 
 	// /////////////////////// PRIVATE METHODS //////////////////////////
@@ -203,6 +189,8 @@ public class GameLogicImpl implements GameLogic {
 		int y = row;
 		boolean ownChip = false;
 		
+		int[][] gameMatrix = this.board.getMatrix();
+		
 		//conquer until an own chip is found
 		while ( !ownChip ) {
 			//advancing in the given direction
@@ -210,30 +198,15 @@ public class GameLogicImpl implements GameLogic {
 			y += yDirection;
 			
 			//if is not an own chip
-			if (this.gameMatrix[x][y] != player) {
-				this.gameMatrix[x][y] = player;
+			if (gameMatrix[x][y] != player) {
+				this.setStone(player, x, y);
 			} else {
 				ownChip = true;
 			}
 		}
 	}
 	
-	/**
-	 * initializes the game
-	 */
-	private void initializeMatrix() {
-		for (int col = 0; col < COLS; col++) {
-			for (int row = 0; row < ROWS; row++) {
-				this.gameMatrix[col][row] = EMPTY;
-			}
-		}
-		this.gameMatrix[3][3] = GameLogic.PLAYER_ONE;
-		this.gameMatrix[4][4] = GameLogic.PLAYER_ONE;
-		this.gameMatrix[3][4] = GameLogic.PLAYER_TWO;
-		this.gameMatrix[4][3] = GameLogic.PLAYER_TWO;
-	}
 
-	
 	// /////////////////////// ACCESSORS ////////////////////////////
 	
 	/**
@@ -252,6 +225,19 @@ public class GameLogicImpl implements GameLogic {
 		this.currentPlayer = player;
 	}
 
+	/**
+	 * Returns the board
+	 * @return
+	 */
+	public Board getBoard() {
+		return this.board;
+	}
+
+	
+
+	
+
+	
 	
 
 	

@@ -1,5 +1,7 @@
 package org.cherchi.reversi.logic;
 
+import org.cherchi.reversi.logic.internal.Board;
+
 public interface GameLogic {
 	
 	/***
@@ -33,7 +35,7 @@ public interface GameLogic {
 	 * @param col
 	 * @param row
 	 */
-	void setChip (int player, int col, int row);
+	void setStone (int player, int col, int row);
 	
 	/**
 	 * Informs if the player is blocked (no moves are allowed for him)
@@ -95,6 +97,14 @@ public interface GameLogic {
 	 */
 	void initialize();
 	
-	
-	
+	/**
+	 * Gets the board of this game
+	 * @return
+	 */
+	Board getBoard();
+
+	/**
+	 * Refreshes the possible positions for each player. 
+	 */
+	void refreshMovilityTable();
 }

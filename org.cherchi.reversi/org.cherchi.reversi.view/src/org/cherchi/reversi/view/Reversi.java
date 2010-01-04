@@ -3,6 +3,7 @@ package org.cherchi.reversi.view;
 import org.cherchi.reversi.logic.GameEventsListener;
 import org.cherchi.reversi.logic.GameFacade;
 import org.cherchi.reversi.logic.GameLogic;
+import org.cherchi.reversi.logic.internal.Board;
 import org.cherchi.reversi.logic.internal.GameFacadeImpl;
 import org.cherchi.reversi.logic.internal.GameLogicImpl;
 
@@ -11,7 +12,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.MenuInflater;
 import android.widget.TextView;
@@ -43,7 +43,8 @@ public class Reversi extends Activity implements GameEventsListener,
 		// if is the first time...
 		if (gameFacade == null) {
 			this.gameFacade = new GameFacadeImpl();
-			this.gameFacade.setGameLogic(new GameLogicImpl());
+			this.gameFacade.setMachineOpponent(Settings.getIsDroidOpponent(getBaseContext()));
+			this.gameFacade.setGameLogic(new GameLogicImpl(new Board()));
 		} else {
 			this.refreshCounters();
 		}
@@ -81,7 +82,6 @@ public class Reversi extends Activity implements GameEventsListener,
 		case R.id.restart:
 			this.showNewGameConfirmation(super.getResources().getString(
 					R.string.new_game_msg));
-
 		default:
 			return false;
 		}
@@ -89,7 +89,7 @@ public class Reversi extends Activity implements GameEventsListener,
 	}
 
 	/**
-	 * Occurs when the closes a dialog
+	 * Occurs when the user closes a dialog
 	 * 
 	 * @param dialog
 	 * @param which
@@ -117,6 +117,8 @@ public class Reversi extends Activity implements GameEventsListener,
 	public void onScoreChanged(int p1Score, int p2Score) {
 
 		this.setPlayersCounters(p1Score, p2Score);
+		GameBoard board = (GameBoard) this.findViewById(R.id.gameBoard);
+		board.invalidate();
 	}
 
 	/**
@@ -143,6 +145,7 @@ public class Reversi extends Activity implements GameEventsListener,
 	 */
 	private void restart() {
 		this.gameFacade.restart();
+		this.gameFacade.setMachineOpponent(Settings.getIsDroidOpponent(getBaseContext()));
 		this.refreshCounters();
 		GameBoard gameBoard = (GameBoard) this.findViewById(R.id.gameBoard);
 		gameBoard.invalidate();
@@ -167,6 +170,7 @@ public class Reversi extends Activity implements GameEventsListener,
 		txtP1.setText(String.format(" %d", p1Score));
 		TextView txtP2 = (TextView) this.findViewById(R.id.txtPlayer2Counter);
 		txtP2.setText(String.format(" %d", p2Score));
+		
 	}
 
 	/**
