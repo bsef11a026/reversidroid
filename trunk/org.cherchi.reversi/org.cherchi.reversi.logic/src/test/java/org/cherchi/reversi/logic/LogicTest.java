@@ -3,6 +3,7 @@ package org.cherchi.reversi.logic;
 import static org.junit.Assert.*;
 
 import org.cherchi.reversi.logic.GameLogic;
+import org.cherchi.reversi.logic.internal.Board;
 import org.cherchi.reversi.logic.internal.GameLogicImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +32,7 @@ public class LogicTest {
 	 */
 	@Before
 	public void beforeTest() {
-		game = new GameLogicImpl();
+		game = new GameLogicImpl(new Board());
 	}
 
 	/**
@@ -55,7 +56,7 @@ public class LogicTest {
 	public void testCannotSetWhenCellIsBusy() {
 
 		// player one sets a chip into 2,2
-		game.setChip(GameLogic.PLAYER_ONE, 2, 2);
+		game.setStone(GameLogic.PLAYER_ONE, 2, 2);
 		assertFalse("Should not put a chip in a busy cell", game.canSet(
 				GameLogic.PLAYER_TWO, 2, 2));
 	}
@@ -65,12 +66,12 @@ public class LogicTest {
 	 */
 	@Test
 	public void testCanSetIfOwnChipUpwards() {
-		game.setChip(GameLogic.PLAYER_ONE, 1, 0);
-		game.setChip(GameLogic.PLAYER_TWO, 1, 1);
+		game.setStone(GameLogic.PLAYER_ONE, 1, 0);
+		game.setStone(GameLogic.PLAYER_TWO, 1, 1);
 		assertTrue("Should be able to put a chip if encloses an opponent chip",
 				game.canSet(GameLogic.PLAYER_ONE, 1, 2));
 		// but if there is an empty space, should not be able to put
-		game.setChip(GameLogicImpl.EMPTY, 1, 1);
+		game.setStone(GameLogicImpl.EMPTY, 1, 1);
 		assertFalse(
 				"Should be able to put a chip if encloses an opponent chip after empty spaces",
 				game.canSet(GameLogic.PLAYER_ONE, 1, 2));
@@ -81,7 +82,7 @@ public class LogicTest {
 	 */
 	@Test
 	public void testCannotSetIfNoOwnChipUpwards() {
-		game.setChip(GameLogic.PLAYER_TWO, 1, 1);
+		game.setStone(GameLogic.PLAYER_TWO, 1, 1);
 		assertFalse(
 				"Should not be able to put a chip if encloses an opponent chip",
 				game.canSet(GameLogic.PLAYER_ONE, 1, 2));
@@ -92,14 +93,14 @@ public class LogicTest {
 	 */
 	@Test
 	public void testCanSetIfOwnChipDownwards() {
-		game.setChip(GameLogic.PLAYER_ONE, 1, 3);
-		game.setChip(GameLogic.PLAYER_TWO, 1, 2);
-		game.setChip(GameLogic.PLAYER_TWO, 1, 1);
+		game.setStone(GameLogic.PLAYER_ONE, 1, 3);
+		game.setStone(GameLogic.PLAYER_TWO, 1, 2);
+		game.setStone(GameLogic.PLAYER_TWO, 1, 1);
 		assertTrue("Should be able to put a chip if encloses an opponent chip",
 				game.canSet(GameLogic.PLAYER_ONE, 1, 0));
 
 		// but if there is an empty space, should not be able to put
-		game.setChip(GameLogicImpl.EMPTY, 1, 2);
+		game.setStone(GameLogicImpl.EMPTY, 1, 2);
 		assertFalse(
 				"Should be able to put a chip if encloses an opponent chip after empty spaces",
 				game.canSet(GameLogic.PLAYER_ONE, 1, 0));
@@ -111,15 +112,15 @@ public class LogicTest {
 	 */
 	@Test
 	public void testCanSetIfOwnChipRight() {
-		game.setChip(GameLogic.PLAYER_ONE, 7, 1);
-		game.setChip(GameLogic.PLAYER_TWO, 6, 1);
-		game.setChip(GameLogic.PLAYER_TWO, 5, 1);
+		game.setStone(GameLogic.PLAYER_ONE, 7, 1);
+		game.setStone(GameLogic.PLAYER_TWO, 6, 1);
+		game.setStone(GameLogic.PLAYER_TWO, 5, 1);
 
 		assertTrue("Should be able to put a chip if encloses an opponent chip",
 				game.canSet(GameLogic.PLAYER_ONE, 4, 1));
 
 		// but if there is an empty space, should not be able to put
-		game.setChip(GameLogicImpl.EMPTY, 5, 1);
+		game.setStone(GameLogicImpl.EMPTY, 5, 1);
 		assertFalse(
 				"Should not be able to put a chip if encloses an opponent chip after empty spaces",
 				game.canSet(GameLogic.PLAYER_ONE, 4, 1));
@@ -131,9 +132,9 @@ public class LogicTest {
 	 */
 	@Test
 	public void testConquerPositions() {
-		game.setChip(GameLogic.PLAYER_ONE, 7, 2);
-		game.setChip(GameLogic.PLAYER_TWO, 6, 2);
-		game.setChip(GameLogic.PLAYER_TWO, 5, 2);
+		game.setStone(GameLogic.PLAYER_ONE, 7, 2);
+		game.setStone(GameLogic.PLAYER_TWO, 6, 2);
+		game.setStone(GameLogic.PLAYER_TWO, 5, 2);
 		game.conquerPosition(GameLogic.PLAYER_ONE, 4, 2);
 		assertEquals("Position 5 in row 2 should change color",
 				GameLogic.PLAYER_ONE, game.getGameMatrix()[5][2]);
@@ -182,13 +183,13 @@ public class LogicTest {
 	 */
 	@Test
 	public void testCanSetIfOwnChipLeft() {
-		game.setChip(GameLogic.PLAYER_ONE, 4, 4);
-		game.setChip(GameLogic.PLAYER_TWO, 5, 4);
-		game.setChip(GameLogic.PLAYER_TWO, 6, 4);
+		game.setStone(GameLogic.PLAYER_ONE, 4, 4);
+		game.setStone(GameLogic.PLAYER_TWO, 5, 4);
+		game.setStone(GameLogic.PLAYER_TWO, 6, 4);
 		assertTrue("Should be able to put a chip if encloses an opponent chip",
 				game.canSet(GameLogic.PLAYER_ONE, 7, 4));
 		// but if there is an empty space, should not be able to put
-		game.setChip(GameLogicImpl.EMPTY, 5, 4);
+		game.setStone(GameLogicImpl.EMPTY, 5, 4);
 		assertFalse(
 				"Should be able to put a chip if encloses an opponent chip after empty spaces",
 				game.canSet(GameLogic.PLAYER_ONE, 7, 4));
@@ -199,12 +200,12 @@ public class LogicTest {
 	 */
 	@Test
 	public void testCanSetIfOwnChipLeftUp() {
-		game.setChip(GameLogic.PLAYER_TWO, 2, 2);
+		game.setStone(GameLogic.PLAYER_TWO, 2, 2);
 		assertTrue("Should be able to put a chip if encloses an opponent chip",
 				game.canSet(GameLogic.PLAYER_TWO, 5, 5));
 
 		// but if there is an empty space, should not be able to put
-		game.setChip(GameLogicImpl.EMPTY, 4, 4);
+		game.setStone(GameLogicImpl.EMPTY, 4, 4);
 		assertFalse(
 				"Should be able to put a chip if encloses an opponent chip after empty spaces",
 				game.canSet(GameLogic.PLAYER_TWO, 5, 5));
@@ -215,14 +216,14 @@ public class LogicTest {
 	 */
 	@Test
 	public void testCanSetIfOwnChipLeftDown() {
-		game.setChip(GameLogic.PLAYER_ONE, 0, 3);
-		game.setChip(GameLogic.PLAYER_TWO, 1, 2);
-		game.setChip(GameLogic.PLAYER_TWO, 2, 1);
+		game.setStone(GameLogic.PLAYER_ONE, 0, 3);
+		game.setStone(GameLogic.PLAYER_TWO, 1, 2);
+		game.setStone(GameLogic.PLAYER_TWO, 2, 1);
 		assertTrue("Should be able to put a chip if encloses an opponent chip",
 				game.canSet(GameLogic.PLAYER_ONE, 3, 0));
 
 		// but if there is an empty space, should not be able to put
-		game.setChip(GameLogicImpl.EMPTY, 5, 2);
+		game.setStone(GameLogicImpl.EMPTY, 5, 2);
 		assertFalse(
 				"Should be able to put a chip if encloses an opponent chip after empty spaces",
 				game.canSet(GameLogic.PLAYER_ONE, 1, 0));
@@ -233,14 +234,14 @@ public class LogicTest {
 	 */
 	@Test
 	public void testCanSetIfOwnChipRightDown() {
-		game.setChip(GameLogic.PLAYER_ONE, 4, 3);
-		game.setChip(GameLogic.PLAYER_TWO, 2, 1);
-		game.setChip(GameLogic.PLAYER_TWO, 3, 2);
+		game.setStone(GameLogic.PLAYER_ONE, 4, 3);
+		game.setStone(GameLogic.PLAYER_TWO, 2, 1);
+		game.setStone(GameLogic.PLAYER_TWO, 3, 2);
 		assertTrue("Should be able to put a chip if encloses an opponent chip",
 				game.canSet(GameLogic.PLAYER_ONE, 1, 0));
 
 		// but if there is an empty space, should not be able to put
-		game.setChip(GameLogicImpl.EMPTY, 3, 2);
+		game.setStone(GameLogicImpl.EMPTY, 3, 2);
 		assertFalse(
 				"Should be able to put a chip if encloses an opponent chip after empty spaces",
 				game.canSet(GameLogic.PLAYER_ONE, 1, 0));
@@ -251,14 +252,14 @@ public class LogicTest {
 	 */
 	@Test
 	public void testCanSetIfOwnChipRightUp() {
-		game.setChip(GameLogic.PLAYER_ONE, 3, 0);
-		game.setChip(GameLogic.PLAYER_TWO, 2, 1);
-		game.setChip(GameLogic.PLAYER_TWO, 1, 2);
+		game.setStone(GameLogic.PLAYER_ONE, 3, 0);
+		game.setStone(GameLogic.PLAYER_TWO, 2, 1);
+		game.setStone(GameLogic.PLAYER_TWO, 1, 2);
 		assertTrue("Should be able to put a chip if encloses an opponent chip",
 				game.canSet(GameLogic.PLAYER_ONE, 0, 3));
 
 		// but if there is an empty space, should not be able to put
-		game.setChip(GameLogic.EMPTY, 2, 1);
+		game.setStone(GameLogic.EMPTY, 2, 1);
 		assertFalse(
 				"Should be able to put a chip if encloses an opponent chip after empty spaces",
 				game.canSet(GameLogic.PLAYER_ONE, 1, 0));
@@ -273,15 +274,15 @@ public class LogicTest {
 		TestHelper.cleanBoard(game);
 		
 		// setting a blocking situation for player 2
-		game.setChip(GameLogic.PLAYER_TWO, 0, 7);
-		game.setChip(GameLogic.PLAYER_ONE, 0, 6);
-		game.setChip(GameLogic.PLAYER_ONE, 1, 6);
-		game.setChip(GameLogic.PLAYER_ONE, 1, 7);
-		game.setChip(GameLogic.PLAYER_TWO, 0, 5);
-		game.setChip(GameLogic.PLAYER_TWO, 1, 5);
-		game.setChip(GameLogic.PLAYER_TWO, 2, 5);
-		game.setChip(GameLogic.PLAYER_TWO, 2, 6);
-		game.setChip(GameLogic.PLAYER_TWO, 2, 7);
+		game.setStone(GameLogic.PLAYER_TWO, 0, 7);
+		game.setStone(GameLogic.PLAYER_ONE, 0, 6);
+		game.setStone(GameLogic.PLAYER_ONE, 1, 6);
+		game.setStone(GameLogic.PLAYER_ONE, 1, 7);
+		game.setStone(GameLogic.PLAYER_TWO, 0, 5);
+		game.setStone(GameLogic.PLAYER_TWO, 1, 5);
+		game.setStone(GameLogic.PLAYER_TWO, 2, 5);
+		game.setStone(GameLogic.PLAYER_TWO, 2, 6);
+		game.setStone(GameLogic.PLAYER_TWO, 2, 7);
 
 		assertTrue("Player 2 should be blocked", game
 				.isBlockedPlayer(GameLogic.PLAYER_TWO));
@@ -300,15 +301,15 @@ public class LogicTest {
 		TestHelper.fillAllBoardWithPlayer(GameLogic.PLAYER_ONE, game);
 		
 		// setting a blocking situation for player 2
-		game.setChip(GameLogic.PLAYER_TWO, 0, 7);
-		game.setChip(GameLogic.PLAYER_ONE, 0, 6);
-		game.setChip(GameLogic.PLAYER_ONE, 1, 6);
-		game.setChip(GameLogic.PLAYER_ONE, 1, 7);
-		game.setChip(GameLogic.PLAYER_TWO, 0, 5);
-		game.setChip(GameLogic.PLAYER_TWO, 1, 5);
-		game.setChip(GameLogic.PLAYER_TWO, 2, 5);
-		game.setChip(GameLogic.PLAYER_TWO, 2, 6);
-		game.setChip(GameLogic.PLAYER_TWO, 2, 7);
+		game.setStone(GameLogic.PLAYER_TWO, 0, 7);
+		game.setStone(GameLogic.PLAYER_ONE, 0, 6);
+		game.setStone(GameLogic.PLAYER_ONE, 1, 6);
+		game.setStone(GameLogic.PLAYER_ONE, 1, 7);
+		game.setStone(GameLogic.PLAYER_TWO, 0, 5);
+		game.setStone(GameLogic.PLAYER_TWO, 1, 5);
+		game.setStone(GameLogic.PLAYER_TWO, 2, 5);
+		game.setStone(GameLogic.PLAYER_TWO, 2, 6);
+		game.setStone(GameLogic.PLAYER_TWO, 2, 7);
 
 		
 		assertTrue("Should be finished", this.game.isFinished());

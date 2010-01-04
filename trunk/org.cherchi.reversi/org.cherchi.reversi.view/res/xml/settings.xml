@@ -6,4 +6,9 @@
   	android:title="@string/show_hints"
   	android:summary="@string/show_hints_description"
   	android:defaultValue="true"/>
+  <CheckBoxPreference
+  	android:key="is_droid_opponent"
+  	android:title="@string/is_droid_opponent"
+  	android:summary="@string/is_droid_opponent_description"
+  	android:defaultValue="true"/>
 </PreferenceScreen>

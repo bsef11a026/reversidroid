@@ -2,6 +2,7 @@ package org.cherchi.reversi.logic;
 
 import static org.junit.Assert.assertEquals;
 
+import org.cherchi.reversi.logic.internal.Board;
 import org.cherchi.reversi.logic.internal.GameFacadeImpl;
 import org.cherchi.reversi.logic.internal.GameLogicImpl;
 import org.junit.Before;
@@ -24,7 +25,7 @@ public class FacadeTest {
 	public void prepare() {
 
 		this.facade = new GameFacadeImpl();
-		this.logic = new GameLogicImpl();
+		this.logic = new GameLogicImpl(new Board());
 
 		this.facade.setGameLogic(logic);
 	}
@@ -37,6 +38,7 @@ public class FacadeTest {
 	@Test
 	public void testSet() {
 
+		this.facade.setMachineOpponent(false);
 		// initial position should allow set a chip to player one
 		this.facade.set(GameLogic.PLAYER_ONE, 5, 3);
 		// if the set is ok, player should change
@@ -57,6 +59,7 @@ public class FacadeTest {
 	public void testRestart() {
 
 		// initial position should allow set a chip to player one
+		this.facade.setMachineOpponent(false);
 		this.facade.set(GameLogic.PLAYER_ONE, 5, 3);
 		assertEquals("Before restart, score should be 4", 4, this.facade
 				.getScoreForPlayer(GameLogic.PLAYER_ONE));
@@ -76,16 +79,16 @@ public class FacadeTest {
 		TestHelper.fillAllBoardWithPlayer(GameLogic.PLAYER_ONE, this.logic);
 
 		// preparing first player 2 movement
-		this.logic.setChip(GameLogic.EMPTY, 2, 0);
-		this.logic.setChip(GameLogic.PLAYER_TWO, 2, 2);
+		this.logic.setStone(GameLogic.EMPTY, 2, 0);
+		this.logic.setStone(GameLogic.PLAYER_TWO, 2, 2);
 
 		// preparing second player 2 movement
-		this.logic.setChip(GameLogic.EMPTY, GameLogic.COLS - 1, 0);
-		this.logic.setChip(GameLogic.PLAYER_TWO, 0, 0);
+		this.logic.setStone(GameLogic.EMPTY, GameLogic.COLS - 1, 0);
+		this.logic.setStone(GameLogic.PLAYER_TWO, 0, 0);
 
 		// preparing the last time player 1 plays
-		this.logic.setChip(GameLogic.EMPTY, 0, 0);
-		this.logic.setChip(GameLogic.PLAYER_TWO, 0, 1);
+		this.logic.setStone(GameLogic.EMPTY, 0, 0);
+		this.logic.setStone(GameLogic.PLAYER_TWO, 0, 1);
 
 		// setting last time player 1
 		this.facade.set(GameLogic.PLAYER_ONE, 0, 0);

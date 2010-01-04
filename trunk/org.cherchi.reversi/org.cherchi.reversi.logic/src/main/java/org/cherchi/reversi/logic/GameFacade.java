@@ -65,5 +65,11 @@ public interface GameFacade {
 	 * @return
 	 */
 	int getScoreForPlayer(int player);
+	
+	/**
+	 * If true the game is against droid, otherwise against human
+	 * @param isDroid
+	 */
+	public void setMachineOpponent(boolean machineOpponent);
 
 }

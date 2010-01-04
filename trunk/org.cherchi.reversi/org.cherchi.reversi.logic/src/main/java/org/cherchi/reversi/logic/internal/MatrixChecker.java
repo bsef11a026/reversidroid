@@ -14,7 +14,7 @@ public class MatrixChecker {
 	// /////////////////////// PRIVATE FIELDS //////////////////////////
 
 	/**
-	 * The one and only matrix
+	 * The game matrix
 	 */
 	private int[][] gameMatrix;
 
@@ -23,9 +23,9 @@ public class MatrixChecker {
 	/**
 	 * Constructs the checker
 	 */
-	public MatrixChecker(int[][] matrix) {
+	public MatrixChecker(Board board) {
 
-		this.gameMatrix = matrix;
+		this.gameMatrix = board.getMatrix();
 	}
 
 	/**
@@ -50,6 +50,19 @@ public class MatrixChecker {
 
 		return canPut;
 
+	}
+	
+	
+	public boolean canPlay(int player, int col, int row) {
+		
+		if (this.gameMatrix[col][row] == GameLogic.EMPTY) {
+			
+			
+			
+		}
+		
+		
+		return false;
 	}
 
 	/**
