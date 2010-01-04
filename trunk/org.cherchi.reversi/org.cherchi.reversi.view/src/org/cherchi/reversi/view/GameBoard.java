@@ -72,13 +72,13 @@ public class GameBoard extends View {
 	 * The color used by the player 1
 	 */
 	private int playerOneColor = Color.BLUE;
-	private int playerOneInsideColor = Color.rgb(0, 0, 200);
+	private int playerOneInsideColor = Color.rgb(0, 0, 150);
 
 	/**
 	 * Color used by player 2
 	 */
 	private int playerTwoColor = Color.RED;
-	private int playerTwoInsideColor = Color.rgb(200, 0, 0);
+	private int playerTwoInsideColor = Color.rgb(150, 0, 0);
 
 	
 
@@ -98,6 +98,24 @@ public class GameBoard extends View {
 
 	// /////////////////////// EVENTS ////////////////////////////////////////
 
+	@Override 
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		//setting width and height equally
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		int h = this.getMeasuredHeight();
+		int w = this.getMeasuredWidth();
+		if (h < w) {
+			w = h;
+		} else {
+			h = w;
+		}
+		//reducing to be 8 multiple + 1 (to have room for the line)
+		if (h % 8 != 0) {
+			int intPart = (h / 8) * 8;
+			h = intPart + 1;
+		}
+		this.setMeasuredDimension(h, h);
+	}
 	/**
 	 * Occurs when drawing the board
 	 * 
@@ -112,7 +130,8 @@ public class GameBoard extends View {
 			this.calculateGraphicParameters();
 			this.isNotCalulatedParameters = false;
 		}
-		// this.setBackgroundColor(this.backgroundColor);
+		
+		this.setBackgroundColor(Color.DKGRAY);
 		// drawing the game board
 		this.drawBoard();
 
