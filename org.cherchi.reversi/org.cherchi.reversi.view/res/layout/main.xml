@@ -7,7 +7,7 @@
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:paddingRight="25dip">
 		<TextView android:text="@string/p1" android:id="@+id/txtPlayer1"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+			android:layout_width="wrap_content" android:layout_height="wrap_content"/>
 		<TextView android:text=" 2" android:id="@+id/txtPlayer1Counter"
 			android:minWidth="30dp" android:layout_width="wrap_content"
 			android:layout_height="wrap_content"></TextView>
@@ -17,10 +17,10 @@
 			android:minWidth="30dp" android:layout_width="wrap_content"
 			android:layout_height="wrap_content"></TextView>
 	</LinearLayout>
-	
 	<org.cherchi.reversi.view.GameBoard
 		android:id="@+id/gameBoard" android:layout_width="wrap_content"
-		android:layout_height="fill_parent">
-	</org.cherchi.reversi.view.GameBoard>
-
+		android:layout_height="wrap_content"
+		android:layout_gravity="top"
+		android:layout_weight="0"/>
+	 <ImageView android:src=></ImageView>
 </LinearLayout>
