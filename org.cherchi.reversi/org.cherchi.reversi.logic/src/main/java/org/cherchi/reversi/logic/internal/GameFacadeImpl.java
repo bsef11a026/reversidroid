@@ -1,5 +1,8 @@
 package org.cherchi.reversi.logic.internal;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.cherchi.reversi.logic.GameEventsListener;
 import org.cherchi.reversi.logic.GameFacade;
 import org.cherchi.reversi.logic.GameLogic;
@@ -28,6 +31,9 @@ public class GameFacadeImpl implements GameFacade {
 	 * Indicates if we are in 1 player mode or 2 player mode
 	 */
 	private boolean isMachineOpponent = true;
+	
+	
+	
 
 	// /////////////////////// PUBLIC METHODS //////////////////////////
 
@@ -46,26 +52,38 @@ public class GameFacadeImpl implements GameFacade {
 	@Override
 	public void set(int player, int col, int row) {
 
-		boolean machineHasToPlay = true;
+		boolean playerHasChanged;
 
-		this.doMovement(player, col, row);
+		playerHasChanged = this.doMovement(player, col, row);
 		// if is the machine moment...
-		if (this.isMachineOpponent
-				&& this.getCurrentPlayer() == GameLogic.PLAYER_TWO) {
-
-			while (machineHasToPlay) {
-				Movement machineMovement = this.machinePlays();
-				if (machineMovement != null) {
-					this.doMovement(GameLogic.PLAYER_TWO, machineMovement
-							.getColumn(), machineMovement.getRow());
-				}
-
-				// if opponent is blocked machine must continue playing
-				machineHasToPlay = this.gameLogic
-						.isBlockedPlayer(GameLogic.PLAYER_ONE)
-						&& !this.gameLogic
-								.isBlockedPlayer(GameLogic.PLAYER_TWO);
-			}
+		if (this.isMachineOpponent && playerHasChanged && 
+				this.gameLogic.getCurrentPlayer() == GameLogic.PLAYER_TWO) {
+			
+				//TODO launch second thread
+			
+			MachineThread secondThread = new MachineThread();
+			secondThread.setGameEventsListener(this.gameEventsListener);
+			secondThread.setGameLogic(this.gameLogic);
+			
+			ExecutorService threadExecutor = Executors.newSingleThreadExecutor();
+			threadExecutor.execute(secondThread);
+			
+			
+			
+//			do {
+//				Movement machineMovement = this.machinePlays();
+//				if (machineMovement != null) {
+//					playerHasChanged = this.doMovement(GameLogic.PLAYER_TWO,
+//							machineMovement.getColumn(), machineMovement
+//									.getRow());
+//				} else {
+//					//if machine movement is null.. machine cannot play 
+//					playerHasChanged = true;
+//				}
+//				// it can happen that the human can not play...
+//			} while (!playerHasChanged);
+//			
+			
 		}
 
 	}
@@ -105,16 +123,18 @@ public class GameFacadeImpl implements GameFacade {
 	 * @param player
 	 * @param col
 	 * @param row
+	 * @return if the turn has to change
 	 */
-	private void doMovement(int player, int col, int row) {
+	private boolean doMovement(int player, int col, int row) {
 
+		boolean changePlayer = false;
 		if (this.gameLogic.canSet(player, col, row)) {
 			this.gameLogic.setStone(player, col, row);
 			this.gameLogic.conquerPosition(player, col, row);
-			this.gameLogic.refreshMovilityTable();
-			this.togglePlayer();
+			changePlayer = this.togglePlayer();
 		}
 		this.notifyChanges();
+		return changePlayer;
 	}
 
 	/**
@@ -144,29 +164,41 @@ public class GameFacadeImpl implements GameFacade {
 
 	/**
 	 * Changes the player
+	 * 
+	 * @return if the player has been toggled (if the opponent player can play)
 	 */
-	private void togglePlayer() {
+	private boolean togglePlayer() {
 
 		int current = this.gameLogic.getCurrentPlayer();
+		boolean toggled;
 		// if the next player can play (has at least one place to put the
 		// chip)
 		if (!this.gameLogic.isBlockedPlayer(GameHelper.opponent(current))) {
 			// just toggles
 			this.gameLogic.setCurrentPlayer(GameHelper.opponent(current));
+			toggled = true;
 		} else {
 			System.out.println(String.format(
 					"player %d cannot play!!!!!!!!!!!!!!!!!!!", GameHelper
 							.opponent(current)));
+			toggled = false;
 		}
-
+		return toggled;
 	}
 
+	/**
+	 * Calculates the machine movement
+	 * @return
+	 */
 	private Movement machinePlays() {
 
 		AI ai = new AI(this.gameLogic.getBoard());
-		Movement best = ai.getBestMove(getCurrentPlayer());
+		Movement best = ai.getBestMove(GameLogic.PLAYER_TWO);
 		return best;
 	}
+	
+	
+	
 
 	// /////////////////////// ACCESSORS //////////////////////////
 
@@ -209,5 +241,12 @@ public class GameFacadeImpl implements GameFacade {
 		this.isMachineOpponent = machineOpponent;
 	}
 
-	
+	/**
+	 * gets if the opponent is droid
+	 */
+	@Override
+	public boolean getMachineOpponent() {
+		return this.isMachineOpponent;
+	}
+
 }

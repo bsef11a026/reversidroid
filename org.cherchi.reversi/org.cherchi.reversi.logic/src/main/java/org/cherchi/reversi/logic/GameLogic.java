@@ -104,7 +104,7 @@ public interface GameLogic {
 	Board getBoard();
 
 	/**
-	 * Refreshes the possible positions for each player. 
+	 * Gets the number of movements for the given player
 	 */
-	void refreshMovilityTable();
+	int getMovilityForPlayer(int player);
 }

@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuInflater;
 import android.widget.TextView;
 
@@ -23,8 +24,20 @@ public class Reversi extends Activity implements GameEventsListener,
 	 * The game board
 	 */
 	private GameFacade gameFacade = null;
+	
+	/**
+	 * Used to invoke the GUI operations (UI thread)
+	 */
+	private Handler handler;
 
 	// ///////////////////////// LIFETIME /////////////////////////////////
+	
+	/**
+	 * Constructor
+	 */
+	public Reversi() {
+		this.handler = new Handler();
+	}
 
 	// ///////////////////////// EVENTS ///////////////////////////////////
 
@@ -115,10 +128,9 @@ public class Reversi extends Activity implements GameEventsListener,
 	 */
 	@Override
 	public void onScoreChanged(int p1Score, int p2Score) {
-
-		this.setPlayersCounters(p1Score, p2Score);
-		GameBoard board = (GameBoard) this.findViewById(R.id.gameBoard);
-		board.invalidate();
+		
+		GuiUpdater updater = new GuiUpdater(p1Score, p2Score, this);
+		this.handler.post(updater);
 	}
 
 	/**
@@ -134,12 +146,14 @@ public class Reversi extends Activity implements GameEventsListener,
 			playerName = getResources().getString(R.string.p2);
 		}
 		
-		this.showNewGameConfirmation(String.format(super.getResources()
-				.getString(R.string.game_finished, playerName)));
+		this.handler.post(new MessageBoxShower(String.format(super.getResources()
+				.getString(R.string.game_finished, playerName)), this, this));
 	}
 
 	// ///////////////////////// PRIVATE METHODS ///////////////////////////////
 
+	
+	
 	/**
 	 * Restarts the facade and the graphics
 	 */
@@ -172,6 +186,7 @@ public class Reversi extends Activity implements GameEventsListener,
 		txtP2.setText(String.format(" %d", p2Score));
 		
 	}
+	
 
 	/**
 	 * shows the dialog for confirmation of the restart

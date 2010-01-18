@@ -17,4 +17,5 @@
 	<string name="game_finished">The winner is player %s. Do you want to start again?</string>
 	<string name="is_droid_opponent">Play against droid?</string>
 	<string name="is_droid_opponent_description">Turn it on to play against Android. Turn it off to play against Human.</string>
+	
 </resources>

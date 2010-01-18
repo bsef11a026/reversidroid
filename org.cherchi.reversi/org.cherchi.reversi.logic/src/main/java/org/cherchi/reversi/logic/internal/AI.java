@@ -1,18 +1,49 @@
 package org.cherchi.reversi.logic.internal;
 
 import java.util.List;
+import java.util.Random;
 
 import org.cherchi.reversi.logic.GameLogic;
 
 public class AI {
 
+	// ///////////////////// CONSTANTS ///////////////////////////////////
+
+	/**
+	 * The importance of the movility in the analysis of a position
+	 */
+	private static final int MOVILITY_COEFF = 10;
+
+	/**
+	 * The importance of the positions values in the analysis of the global
+	 * position
+	 */
+	private static final int POSITIONS_COEFF = 6;
+
+	// ///////////////////// PRIVATE FIELDS //////////////////////////////
+
+	/**
+	 * The values of the initial board
+	 */
+	private int[][] values = new int[][] { 
+			{ 50, -1, 5, 2, 2, 5, -1, 50 },
+			{ -1, -10, 1, 1, 1, 1, -10, -1 }, 
+			{ 5, 1, 1, 1, 1, 1, 1, 5 },
+			{ 2, 1, 1, 0, 0, 1, 1, 2 }, 
+			{ 2, 1, 1, 0, 0, 1, 1, 2 },
+			{ 5, 1, 1, 1, 1, 1, 1, 5 }, 
+			{ -1, -10, 1, 1, 1, 1, -10, -1 },
+			{ 50, -1, 5, 2, 2, 5, -1, 50 } };
+
 	/**
 	 * The number of movements the machine will go further
 	 */
-	private int depth = 1;
+	private int depth = 2;
 
-	private Movement bestMoveP1 = null;
-	private Movement bestMoveP2 = null;
+	/**
+	 * The best move
+	 */
+	private Movement bestMove = null;
 
 	/**
 	 * The board (initially a clone of the real one)
@@ -23,8 +54,11 @@ public class AI {
 
 	public AI(Board board) {
 		this.board = board;
+		System.out.println("***************************** RANDOM " + POSITIONS_COEFF);
 	}
 
+	// /////////////////////// PUBLIC METHODS //////////////////////////
+	
 	/**
 	 * Return the best movement for the given player
 	 * 
@@ -36,11 +70,8 @@ public class AI {
 		int color = player - 1;
 		int currDepth = 0;
 		this.negaMax(this.board, currDepth, color);
-		if (player == GameLogic.PLAYER_ONE) {
-			return this.bestMoveP1;
-		} else {
-			return this.bestMoveP2;
-		}
+		return this.bestMove;
+		
 	}
 
 	/**
@@ -79,10 +110,9 @@ public class AI {
 			int x = -negaMax(newMovementBoard, currentDepth + 1, 1 - color);
 			if (x > max) {
 				max = x;
-				if (player == GameLogic.PLAYER_ONE) {
-					this.bestMoveP1 = movement;
-				} else {
-					this.bestMoveP2 = movement;
+				// it only must return "depth 0" movements
+				if (currentDepth == 0) {
+					this.bestMove = movement;
 				}
 			}
 		}
@@ -98,51 +128,40 @@ public class AI {
 	 */
 	private int analysis(Board board, int color) {
 
-		int[][] matrix = board.getMatrix();
 		int player = color + 1;
-		int mobility = 0;
-		for (int col = 0; col < GameLogic.COLS; col++) {
-			for (int row = 0; row < GameLogic.ROWS; row++) {
-				// looking for own mobility
-				if (matrix[col][row] == GameHelper.opponent(player)
-						&& this.isNextToEmtpySpace(col, row, matrix)) {
-					mobility++;
+		int points;
+
+		GameLogic logic = new GameLogicImpl(board);
+		int movility = logic.getMovilityForPlayer(player);
+		int positions = this.evaluateStrategicPosition(board, player);
+
+		points = movility * MOVILITY_COEFF + positions * POSITIONS_COEFF;
+
+		return points;
+
+	}
+
+	/**
+	 * Returns the addition of the values of each position from the perspective
+	 * of the player
+	 * 
+	 * @param board
+	 * @param player
+	 * @return
+	 */
+	private int evaluateStrategicPosition(Board board, int player) {
+
+		int total = 0;
+		for (int i = 0; i < GameLogic.COLS; i++) {
+			for (int j = 0; j < GameLogic.ROWS; j++) {
+				if (board.getMatrix()[i][j] == player) {
+					total += this.values[i][j];
 				}
 			}
 		}
-		return mobility;
+
+		return total;
 	}
 
-	private boolean isNextToEmtpySpace(int col, int row, int[][] matrix) {
-
-		if (col > 0 && matrix[col - 1][row] == GameLogic.EMPTY) {
-			return true;
-		}
-		if (col < GameLogic.COLS - 1 && matrix[col + 1][row] == GameLogic.EMPTY) {
-			return true;
-		}
-		if (row > 0 && matrix[col][row - 1] == GameLogic.EMPTY) {
-			return true;
-		}
-		if (row < GameLogic.ROWS - 1 && matrix[col][row + 1] == GameLogic.EMPTY) {
-			return true;
-		}
-		if (col > 0 && row > 0 && matrix[col - 1][row - 1] == GameLogic.EMPTY) {
-			return true;
-		}
-		if (col > 0 && row < GameLogic.ROWS - 1
-				&& matrix[col - 1][row + 1] == GameLogic.EMPTY) {
-			return true;
-		}
-		if (col < GameLogic.COLS - 1 && row > 0
-				&& matrix[col + 1][row - 1] == GameLogic.EMPTY) {
-			return true;
-		}
-		if (col < GameLogic.COLS - 1 && row < GameLogic.ROWS - 1
-				&& matrix[col + 1][row + 1] == GameLogic.EMPTY) {
-			return true;
-		}
-
-		return false;
-	}
+	
 }

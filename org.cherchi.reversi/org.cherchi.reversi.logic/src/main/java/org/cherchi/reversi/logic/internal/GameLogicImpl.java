@@ -110,10 +110,26 @@ public class GameLogicImpl implements GameLogic {
 		return allowedPositions;
 	}
 
+	/**
+	 * Gets the current movility for the given player
+	 */
 	@Override
-	public void refreshMovilityTable() {
+	public int getMovilityForPlayer(int player) {
 		
+		int movility = 0;
+		
+		// scanning the grid
+		for (int col = 0; col < COLS; col++) {
+			for (int row = 0; row < ROWS; row++) {
+				// if player can set
+				if (this.matrixChecker.canSet(player, col, row)) {
+					movility ++;
+				}
+			}
+		}
+		return movility;
 	}
+
 	
 	/**
 	 * Conquers the positions in all directions (if the player is enclosing opponent pieces, 
@@ -148,7 +164,7 @@ public class GameLogicImpl implements GameLogic {
 			this.conquer(player, column, row, Direction.X.RIGHT, Direction.Y.UP);
 		}
 
-	}
+}
 	
 	/**
 	 * Gets the number of stones for a given player
