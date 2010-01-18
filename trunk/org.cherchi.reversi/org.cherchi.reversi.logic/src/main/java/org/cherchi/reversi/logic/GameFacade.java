@@ -71,5 +71,12 @@ public interface GameFacade {
 	 * @param isDroid
 	 */
 	public void setMachineOpponent(boolean machineOpponent);
+	
+	/**
+	 * Gets if the opponent is droid
+	 * @return
+	 */
+	public boolean getMachineOpponent();
+
 
 }

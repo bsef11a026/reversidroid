@@ -12,6 +12,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -80,8 +81,6 @@ public class GameBoard extends View {
 	private int playerTwoColor = Color.RED;
 	private int playerTwoInsideColor = Color.rgb(150, 0, 0);
 
-	
-
 	/**
 	 * The first time parameters are not calculated
 	 */
@@ -98,9 +97,9 @@ public class GameBoard extends View {
 
 	// /////////////////////// EVENTS ////////////////////////////////////////
 
-	@Override 
+	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		//setting width and height equally
+		// setting width and height equally
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		int h = this.getMeasuredHeight();
 		int w = this.getMeasuredWidth();
@@ -109,13 +108,14 @@ public class GameBoard extends View {
 		} else {
 			h = w;
 		}
-		//reducing to be 8 multiple + 1 (to have room for the line)
+		// reducing to be 8 multiple + 1 (to have room for the line)
 		if (h % 8 != 0) {
 			int intPart = (h / 8) * 8;
 			h = intPart + 1;
 		}
 		this.setMeasuredDimension(h, h);
 	}
+
 	/**
 	 * Occurs when drawing the board
 	 * 
@@ -130,12 +130,12 @@ public class GameBoard extends View {
 			this.calculateGraphicParameters();
 			this.isNotCalulatedParameters = false;
 		}
-		
+
 		this.setBackgroundColor(Color.DKGRAY);
 		// drawing the game board
 		this.drawBoard();
 
-		// setting all possible position 
+		// setting all possible position
 		this.markAllowedPositions();
 
 	}
@@ -156,9 +156,18 @@ public class GameBoard extends View {
 			int col = transformCoordinateXInColumn(x);
 			int row = transformCoordinateYInRow(y);
 
-			this.setPosition(col, row, this.gameFacade.getCurrentPlayer());
-			this.invalidate();
-			
+			// if we are playing against human, just play
+			if (!this.gameFacade.getMachineOpponent()) {
+				this.setPosition(col, row, this.gameFacade.getCurrentPlayer());
+			} else {
+				// if we are playing against droid, checking if we are player 1
+				if (this.gameFacade.getCurrentPlayer() == GameFacade.PLAYER_ONE) {
+					this.setPosition(col, row, this.gameFacade
+							.getCurrentPlayer());
+				}
+			}
+
+			// this.invalidate();
 
 			return true;
 		} else {
@@ -170,8 +179,6 @@ public class GameBoard extends View {
 	// ////////////////////// PUBLIC METHODS /////////////////////////////
 
 	// ////////////////////// PRIVATE METHODS ////////////////////////////
-
-	
 
 	/**
 	 * draws a fill circle in the column and row given having in mind the player
@@ -278,24 +285,30 @@ public class GameBoard extends View {
 
 	/**
 	 * Marks in the screen the allowed positions
-	
 	 */
 	private void markAllowedPositions() {
 		if (Settings.getShowAllowedPositions(getContext())) {
 
-			// getting the positions to mark
-			int[][] allowedPos = this.gameFacade.getAllowedPositionsForPlayer();
+			//if we are in 2 player mode or we are in 1 player mode and player is one 
+			if (!this.gameFacade.getMachineOpponent()
+					|| this.gameFacade.getCurrentPlayer() == GameFacade.PLAYER_ONE) {
 
-			for (int i = 0; i < GameLogic.COLS; i++) {
-				for (int j = 0; j < GameLogic.ROWS; j++) {
-					// if there is a position of a player to draw
-					if (allowedPos[i][j] != GameLogic.EMPTY) {
-						// drawing hypothetic positions
-						this.drawPosition(i, j, allowedPos[i][j], false);
+				// getting the positions to mark
+				int[][] allowedPos = this.gameFacade
+						.getAllowedPositionsForPlayer();
+
+				for (int i = 0; i < GameLogic.COLS; i++) {
+					for (int j = 0; j < GameLogic.ROWS; j++) {
+						// if there is a position of a player to draw
+						if (allowedPos[i][j] != GameLogic.EMPTY) {
+							// drawing hypothetic positions
+							this.drawPosition(i, j, allowedPos[i][j], false);
+						}
 					}
 				}
 			}
 		}
+
 	}
 
 	/**
@@ -346,7 +359,7 @@ public class GameBoard extends View {
 			width = height;
 		}
 
-		// converting the dimensions to get them divisible by 8 
+		// converting the dimensions to get them divisible by 8
 		while (width % 8 != 0) {
 			width--;
 			height--;
@@ -383,7 +396,7 @@ public class GameBoard extends View {
 	/**
 	 * Draws all the chips
 	 */
-	private void drawPositions() {
+	public void drawPositions() {
 
 		int[][] gameMatrix = this.gameFacade.getGameMatrix();
 
@@ -412,5 +425,4 @@ public class GameBoard extends View {
 		return gameFacade;
 	}
 
-	
 }

@@ -11,4 +11,8 @@
   	android:title="@string/is_droid_opponent"
   	android:summary="@string/is_droid_opponent_description"
   	android:defaultValue="true"/>
+  <ListPreference
+  	
+  	android:entries="@array/levels"
+  />	
 </PreferenceScreen>

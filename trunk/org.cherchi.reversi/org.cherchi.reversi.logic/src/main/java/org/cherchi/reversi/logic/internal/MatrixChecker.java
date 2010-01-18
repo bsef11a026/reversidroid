@@ -53,18 +53,7 @@ public class MatrixChecker {
 	}
 	
 	
-	public boolean canPlay(int player, int col, int row) {
-		
-		if (this.gameMatrix[col][row] == GameLogic.EMPTY) {
-			
-			
-			
-		}
-		
-		
-		return false;
-	}
-
+	
 	/**
 	 * Checks if from a given position player are enclosing an opponent chip
 	 */
