@@ -111,23 +111,23 @@ public class GameLogicImpl implements GameLogic {
 	}
 
 	/**
-	 * Gets the current movility for the given player
+	 * Gets the current mobility (possible options to play) for the given player
 	 */
 	@Override
-	public int getMovilityForPlayer(int player) {
+	public int getMobilityForPlayer(int player) {
 		
-		int movility = 0;
+		int mobility = 0;
 		
 		// scanning the grid
 		for (int col = 0; col < COLS; col++) {
 			for (int row = 0; row < ROWS; row++) {
 				// if player can set
 				if (this.matrixChecker.canSet(player, col, row)) {
-					movility ++;
+					mobility ++;
 				}
 			}
 		}
-		return movility;
+		return mobility;
 	}
 
 	
