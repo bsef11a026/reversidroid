@@ -132,7 +132,7 @@ public class AI {
 		int points;
 
 		GameLogic logic = new GameLogicImpl(board);
-		int movility = logic.getMovilityForPlayer(player);
+		int movility = logic.getMobilityForPlayer(player);
 		int positions = this.evaluateStrategicPosition(board, player);
 
 		points = movility * MOVILITY_COEFF + positions * POSITIONS_COEFF;
