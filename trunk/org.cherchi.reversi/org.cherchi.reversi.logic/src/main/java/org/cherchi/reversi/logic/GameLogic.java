@@ -106,5 +106,5 @@ public interface GameLogic {
 	/**
 	 * Gets the number of movements for the given player
 	 */
-	int getMovilityForPlayer(int player);
+	int getMobilityForPlayer(int player);
 }
