@@ -92,7 +92,7 @@ public class AI {
 		// max play value of all movements
 		int max = Integer.MIN_VALUE + 1;
 
-		List<Movement> movements = GameHelper.getAllowedMovementsForPlayer(
+		List<Movement> movements = GameUtils.getAllowedMovementsForPlayer(
 				player, board);
 		if (movements.size() == 0) {
 			isFinished = true;

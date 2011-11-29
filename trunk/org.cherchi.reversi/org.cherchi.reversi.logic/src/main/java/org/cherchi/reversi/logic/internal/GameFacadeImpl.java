@@ -173,13 +173,13 @@ public class GameFacadeImpl implements GameFacade {
 		boolean toggled;
 		// if the next player can play (has at least one place to put the
 		// chip)
-		if (!this.gameLogic.isBlockedPlayer(GameHelper.opponent(current))) {
+		if (!this.gameLogic.isBlockedPlayer(GameUtils.opponent(current))) {
 			// just toggles
-			this.gameLogic.setCurrentPlayer(GameHelper.opponent(current));
+			this.gameLogic.setCurrentPlayer(GameUtils.opponent(current));
 			toggled = true;
 		} else {
 			System.out.println(String.format(
-					"player %d cannot play!!!!!!!!!!!!!!!!!!!", GameHelper
+					"player %d cannot play!!!!!!!!!!!!!!!!!!!", GameUtils
 							.opponent(current)));
 			toggled = false;
 		}
