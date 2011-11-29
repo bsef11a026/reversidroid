@@ -1,7 +1,5 @@
 package org.cherchi.reversi.logic.internal;
 
-import java.util.Random;
-
 import org.cherchi.reversi.logic.GameLogic;
 
 public class Board {
