@@ -90,7 +90,7 @@ public class MachineThread implements Runnable {
 	
 	
 	/**
-	 * Notifies the listener for the changes occured in the game
+	 * Notifies the listener for the changes occurred in the game
 	 */
 	private void notifyChanges() {
 		if (this.gameEventsListener != null) {

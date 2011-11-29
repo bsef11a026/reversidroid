@@ -1,7 +1,6 @@
 package org.cherchi.reversi.logic.internal;
 
 import java.util.List;
-import java.util.Random;
 
 import org.cherchi.reversi.logic.GameLogic;
 
@@ -10,9 +9,9 @@ public class AI {
 	// ///////////////////// CONSTANTS ///////////////////////////////////
 
 	/**
-	 * The importance of the movility in the analysis of a position
+	 * The importance of the mobility in the analysis of a position
 	 */
-	private static final int MOVILITY_COEFF = 10;
+	private static final int MOBILITY_COEFF = 10;
 
 	/**
 	 * The importance of the positions values in the analysis of the global
@@ -132,10 +131,10 @@ public class AI {
 		int points;
 
 		GameLogic logic = new GameLogicImpl(board);
-		int movility = logic.getMobilityForPlayer(player);
+		int mobility = logic.getMobilityForPlayer(player);
 		int positions = this.evaluateStrategicPosition(board, player);
 
-		points = movility * MOVILITY_COEFF + positions * POSITIONS_COEFF;
+		points = mobility * MOBILITY_COEFF + positions * POSITIONS_COEFF;
 
 		return points;
 
